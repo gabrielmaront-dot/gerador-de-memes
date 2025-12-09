@@ -51,6 +51,77 @@ function mostrarCarregamento() {
     ctx.fillText('Aguarde...', canvas.width / 2, canvas.height / 2 + 20);
 }
 
+// Calcular tamanho de fonte dinamicamente baseado no texto
+function calcularTamanhoFonte(texto, maxWidth, tamanhoInicial = 40) {
+    let tamanho = tamanhoInicial;
+    ctx.font = `bold ${tamanho}px Impact, Arial Black, sans-serif`;
+    let largura = ctx.measureText(texto).width;
+    
+    // Reduzir tamanho se texto for muito largo
+    while (largura > maxWidth && tamanho > 20) {
+        tamanho -= 2;
+        ctx.font = `bold ${tamanho}px Impact, Arial Black, sans-serif`;
+        largura = ctx.measureText(texto).width;
+    }
+    
+    return tamanho;
+}
+
+// Quebrar texto em múltiplas linhas
+function quebrarTexto(texto, maxWidth) {
+    const palavras = texto.split(' ');
+    const linhas = [];
+    let linhaAtual = palavras[0] || '';
+    
+    for (let i = 1; i < palavras.length; i++) {
+        const teste = linhaAtual + ' ' + palavras[i];
+        const metrics = ctx.measureText(teste);
+        
+        if (metrics.width > maxWidth && linhaAtual.length > 0) {
+            linhas.push(linhaAtual);
+            linhaAtual = palavras[i];
+        } else {
+            linhaAtual = teste;
+        }
+    }
+    
+    if (linhaAtual) {
+        linhas.push(linhaAtual);
+    }
+    
+    return linhas.length > 0 ? linhas : [texto];
+}
+
+// Desenhar texto com quebra de linha automática
+function desenharTextoComQuebra(texto, x, y, maxWidth, maxHeight, posicao = 'top') {
+    if (!texto) return;
+    
+    // Calcular tamanho de fonte adequado
+    const tamanhoFonte = calcularTamanhoFonte(texto, maxWidth);
+    ctx.font = `bold ${tamanhoFonte}px Impact, Arial Black, sans-serif`;
+    
+    // Quebrar texto em linhas
+    const linhas = quebrarTexto(texto, maxWidth);
+    const alturaLinha = tamanhoFonte * 1.2;
+    const alturaTotal = linhas.length * alturaLinha;
+    
+    // Ajustar posição Y baseado na posição (top ou bottom)
+    let yInicial = y;
+    if (posicao === 'bottom') {
+        yInicial = y - alturaTotal;
+    }
+    
+    // Desenhar cada linha
+    linhas.forEach((linha, index) => {
+        const yLinha = yInicial + (index * alturaLinha);
+        
+        // Desenhar contorno primeiro
+        ctx.strokeText(linha, x, yLinha);
+        // Depois desenhar preenchimento
+        ctx.fillText(linha, x, yLinha);
+    });
+}
+
 // Carregar imagem
 function carregarImagem(url) {
     mostrarCarregamento();
@@ -78,6 +149,7 @@ function carregarImagem(url) {
         ctx.font = '16px Arial';
         ctx.fillText('Tente selecionar outra imagem', canvas.width / 2, canvas.height / 2 + 20);
         imagemAtual = null;
+        atualizarDownload();
     };
     
     img.src = url;
@@ -124,24 +196,22 @@ function renderizarMeme() {
     // Configurar estilo do texto
     configurarTexto();
     
-    // Desenhar texto superior
+    // Configurar parâmetros para quebra de linha
+    const maxWidth = canvas.width - 40; // Margem de 20px de cada lado
+    const x = canvas.width / 2;
+    
+    // Desenhar texto superior com quebra de linha
     if (textoSuperiorValue) {
         ctx.textBaseline = 'top';
         const ySuperior = 30;
-        // Desenhar contorno primeiro (para efeito de borda)
-        ctx.strokeText(textoSuperiorValue, canvas.width / 2, ySuperior);
-        // Depois desenhar preenchimento
-        ctx.fillText(textoSuperiorValue, canvas.width / 2, ySuperior);
+        desenharTextoComQuebra(textoSuperiorValue, x, ySuperior, maxWidth, 150, 'top');
     }
     
-    // Desenhar texto inferior
+    // Desenhar texto inferior com quebra de linha
     if (textoInferiorValue) {
         ctx.textBaseline = 'bottom';
         const yInferior = canvas.height - 30;
-        // Desenhar contorno primeiro
-        ctx.strokeText(textoInferiorValue, canvas.width / 2, yInferior);
-        // Depois desenhar preenchimento
-        ctx.fillText(textoInferiorValue, canvas.width / 2, yInferior);
+        desenharTextoComQuebra(textoInferiorValue, x, yInferior, maxWidth, 150, 'bottom');
     }
     
     // Atualizar link de download
@@ -188,6 +258,41 @@ function atualizarDownload() {
     }
 }
 
+// Função para mostrar mensagem de erro de forma mais elegante
+function mostrarMensagemErro(mensagem) {
+    // Criar elemento de mensagem se não existir
+    let mensagemEl = document.getElementById('mensagemErro');
+    if (!mensagemEl) {
+        mensagemEl = document.createElement('div');
+        mensagemEl.id = 'mensagemErro';
+        mensagemEl.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            font-weight: 600;
+            animation: slideInRight 0.3s ease-out;
+            max-width: 300px;
+        `;
+        document.body.appendChild(mensagemEl);
+    }
+    
+    mensagemEl.textContent = mensagem;
+    mensagemEl.style.display = 'block';
+    
+    setTimeout(() => {
+        mensagemEl.style.animation = 'slideOutRight 0.3s ease-out';
+        setTimeout(() => {
+            mensagemEl.style.display = 'none';
+        }, 300);
+    }, 3000);
+}
+
 // Event Listeners
 
 // Atualizar ao digitar texto
@@ -231,41 +336,6 @@ btnGerar.addEventListener('click', () => {
         mostrarMensagemErro('Por favor, selecione uma imagem primeiro!');
     }
 });
-
-// Função para mostrar mensagem de erro de forma mais elegante
-function mostrarMensagemErro(mensagem) {
-    // Criar elemento de mensagem se não existir
-    let mensagemEl = document.getElementById('mensagemErro');
-    if (!mensagemEl) {
-        mensagemEl = document.createElement('div');
-        mensagemEl.id = 'mensagemErro';
-        mensagemEl.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
-            color: white;
-            padding: 16px 24px;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            font-weight: 600;
-            animation: slideInRight 0.3s ease-out;
-            max-width: 300px;
-        `;
-        document.body.appendChild(mensagemEl);
-    }
-    
-    mensagemEl.textContent = mensagem;
-    mensagemEl.style.display = 'block';
-    
-    setTimeout(() => {
-        mensagemEl.style.animation = 'slideOutRight 0.3s ease-out';
-        setTimeout(() => {
-            mensagemEl.style.display = 'none';
-        }, 300);
-    }, 3000);
-}
 
 // Inicialização
 function inicializar() {
