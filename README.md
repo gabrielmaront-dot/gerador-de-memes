@@ -2,6 +2,12 @@
 
 Um gerador de memes simples e funcional criado com HTML5 Canvas, CSS3 e JavaScript puro.
 
+## 🎮 Link para Jogar
+
+👉 [**Acesse o Gerador de Memes**](https://seu-usuario.github.io/gerador-de-memes/) 👈
+
+*(Atualize a URL acima após configurar o GitHub Pages)*
+
 ## ✨ Funcionalidades
 
 - ✅ Escolha entre múltiplas imagens de fundo
