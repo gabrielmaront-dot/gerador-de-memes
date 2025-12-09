@@ -7,20 +7,89 @@ const seletorImagem = document.getElementById('seletorImagem');
 const btnGerar = document.getElementById('btnGerar');
 const btnDownload = document.getElementById('btnDownload');
 
-// Array de imagens mockadas (URLs públicas) - Templates perfeitos para memes
+// ============================================
+// BANCO DE IMAGENS - Gerador de Memes
+// ============================================
+// 
+// Para adicionar suas próprias imagens:
+// 1. Coloque o arquivo na pasta 'imagens/'
+// 2. Adicione uma entrada aqui com o caminho relativo
+// 3. Exemplo: { nome: '🐱 Meu Meme', url: 'imagens/meu-meme.jpg' }
+//
+// Você pode usar:
+// - Imagens locais: 'imagens/nome-do-arquivo.jpg'
+// - URLs externas: 'https://exemplo.com/imagem.jpg'
+// ============================================
+
 const imagensMockadas = [
+    // ============================================
+    // IMAGENS LOCAIS (Recomendado)
+    // ============================================
+    // Adicione suas imagens aqui usando caminhos relativos
+    // Exemplo: { nome: '🐱 Gato Surpreso', url: 'imagens/gato-surpreso.jpg' },
+    
+    // ============================================
+    // BANCO DE IMAGENS GRATUITAS - URLs Externas
+    // ============================================
+    // Estas imagens são de serviços gratuitos (Unsplash, Picsum, etc.)
+    // Organizadas por categoria para facilitar navegação
+    
+    // 🐱 ANIMAIS
     { nome: '🐱 Gato Surpreso', url: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&h=400&fit=crop' },
-    { nome: '😎 Homem Pensativo', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop' },
-    { nome: '🤔 Pessoa Confusa', url: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&h=400&fit=crop' },
-    { nome: '🎉 Celebração', url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop' },
-    { nome: '😱 Reação Surpresa', url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&h=400&fit=crop' },
-    { nome: '🤷‍♂️ Indecisão', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop&q=80' },
-    { nome: '🏆 Vitória', url: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop' },
+    { nome: '🐶 Cachorro Feliz', url: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=600&h=400&fit=crop' },
+    { nome: '🦁 Leão', url: 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=600&h=400&fit=crop' },
+    { nome: '🐼 Panda', url: 'https://images.unsplash.com/photo-1525385133512-2f3bdd039054?w=600&h=400&fit=crop' },
+    { nome: '🐰 Coelho', url: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=600&h=400&fit=crop' },
+    
+    // 👤 PESSOAS E EXPRESSÕES
+    { nome: '😎 Pessoa 1', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop' },
+    { nome: '🤔 Pessoa 2', url: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&h=400&fit=crop' },
+    { nome: '😱 Pessoa 3', url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&h=400&fit=crop' },
+    { nome: '🤷‍♂️ Pessoa 4', url: 'https://picsum.photos/600/400?random=14' },
     { nome: '😴 Sonolência', url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&h=400&fit=crop' },
     { nome: '🎭 Drama', url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&h=400&fit=crop' },
-    { nome: '🔥 Fogo', url: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=600&h=400&fit=crop' },
-    { nome: '🌊 Natureza', url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop' },
+    { nome: '😄 Riso', url: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&h=400&fit=crop' },
+    { nome: '🤨 Cético', url: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=600&h=400&fit=crop' },
+    
+    // 🎉 EMOÇÕES E AÇÕES
+    { nome: '🎉 Celebração', url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop' },
+    { nome: '🏆 Vitória', url: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop' },
+    { nome: '💪 Força', url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop' },
+    { nome: '🎯 Foco', url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&h=400&fit=crop' },
+    { nome: '🤝 Aperto de Mão', url: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&h=400&fit=crop' },
+    
+    // 🌍 NATUREZA E PAISAGENS
+    { nome: '🌊 Paisagem Aquática', url: 'https://picsum.photos/600/400?random=11' },
     { nome: '🏙️ Cidade', url: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&h=400&fit=crop' },
+    { nome: '🌅 Paisagem Natural', url: 'https://picsum.photos/600/400?random=12' },
+    { nome: '🌲 Floresta', url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop' },
+    { nome: '🏔️ Vista de Montanha', url: 'https://picsum.photos/600/400?random=13' },
+    { nome: '🌊 Oceano', url: 'https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=600&h=400&fit=crop' },
+    
+    // 🔥 OBJETOS E CONCEITOS
+    { nome: '🏔️ Paisagem Montanhosa', url: 'https://picsum.photos/600/400?random=10' },
+    { nome: '☕ Café', url: 'https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?w=600&h=400&fit=crop' },
+    { nome: '🍕 Pizza', url: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=400&fit=crop' },
+    { nome: '💻 Tecnologia', url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop' },
+    { nome: '📚 Livros', url: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=400&fit=crop' },
+    { nome: '🎮 Games', url: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=600&h=400&fit=crop' },
+    { nome: '🎵 Música', url: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop' },
+    
+    // 🎨 ARTE E CRIATIVIDADE
+    { nome: '🎨 Arte', url: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=600&h=400&fit=crop' },
+    { nome: '📸 Fotografia', url: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600&h=400&fit=crop' },
+    { nome: '✏️ Desenho', url: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=600&h=400&fit=crop&q=80' },
+    
+    // 🌈 CORES E PADRÕES
+    { nome: '🌈 Cores', url: 'https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=600&h=400&fit=crop' },
+    { nome: '⭐ Estrelas', url: 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=600&h=400&fit=crop' },
+    
+    // 📸 Picsum (Imagens Aleatórias de Alta Qualidade)
+    { nome: '🖼️ Imagem Aleatória 1', url: 'https://picsum.photos/600/400?random=1' },
+    { nome: '🖼️ Imagem Aleatória 2', url: 'https://picsum.photos/600/400?random=2' },
+    { nome: '🖼️ Imagem Aleatória 3', url: 'https://picsum.photos/600/400?random=3' },
+    { nome: '🖼️ Imagem Aleatória 4', url: 'https://picsum.photos/600/400?random=4' },
+    { nome: '🖼️ Imagem Aleatória 5', url: 'https://picsum.photos/600/400?random=5' },
 ];
 
 // Variável para armazenar a imagem atual
@@ -127,7 +196,14 @@ function carregarImagem(url) {
     mostrarCarregamento();
     
     const img = new Image();
-    img.crossOrigin = 'anonymous'; // Permite CORS para download
+    
+    // Verificar se é URL externa (precisa de CORS) ou local
+    const isUrlExterna = url.startsWith('http://') || url.startsWith('https://');
+    
+    if (isUrlExterna) {
+        img.crossOrigin = 'anonymous'; // Permite CORS para download (apenas URLs externas)
+    }
+    // Imagens locais não precisam de crossOrigin
     
     img.onload = () => {
         imagemAtual = img;
@@ -138,16 +214,27 @@ function carregarImagem(url) {
     img.onerror = () => {
         carregando = false;
         console.error('Erro ao carregar imagem:', url);
+        
+        // Mensagem de erro mais específica
+        let mensagemErro = 'Erro ao carregar imagem';
+        let mensagemDica = 'Tente selecionar outra imagem';
+        
+        // Se for imagem local, dar dica diferente
+        if (!isUrlExterna) {
+            mensagemErro = 'Imagem local não encontrada';
+            mensagemDica = 'Verifique se o arquivo existe em: ' + url;
+        }
+        
         // Usar imagem padrão em caso de erro
         ctx.fillStyle = '#fee2e2';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#dc2626';
         ctx.font = 'bold 20px Arial';
         ctx.textAlign = 'center';
-        ctx.fillText('❌ Erro ao carregar imagem', canvas.width / 2, canvas.height / 2 - 20);
+        ctx.fillText('❌ ' + mensagemErro, canvas.width / 2, canvas.height / 2 - 20);
         ctx.fillStyle = '#991b1b';
-        ctx.font = '16px Arial';
-        ctx.fillText('Tente selecionar outra imagem', canvas.width / 2, canvas.height / 2 + 20);
+        ctx.font = '14px Arial';
+        ctx.fillText(mensagemDica, canvas.width / 2, canvas.height / 2 + 10);
         imagemAtual = null;
         atualizarDownload();
     };
