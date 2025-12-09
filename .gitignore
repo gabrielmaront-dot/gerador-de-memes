@@ -17,3 +17,16 @@ npm-debug.log*
 *.tmp
 *.temp
 
+# Imagens grandes (adicione suas imagens manualmente)
+# Descomente a linha abaixo se quiser ignorar todas as imagens:
+# imagens/*.jpg
+# imagens/*.png
+# imagens/*.gif
+# imagens/*.jpeg
+# imagens/*.webp
+
+# Manter apenas arquivos de documentação na pasta imagens
+!imagens/.gitkeep
+!imagens/README.md
+!imagens/EXEMPLO.md
+
