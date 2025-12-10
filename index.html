@@ -17,6 +17,17 @@
             <section class="controles">
                 <div class="campo">
                     <label for="textoSuperior">📝 Texto Superior:</label>
+                    <div class="controles-texto">
+                        <div class="controle-item">
+                            <label for="tamanhoFonteSuperior">Tamanho:</label>
+                            <input type="range" id="tamanhoFonteSuperior" min="20" max="60" value="40" class="slider">
+                            <span id="valorTamanhoSuperior">40px</span>
+                        </div>
+                        <div class="controle-item">
+                            <label for="corTextoSuperior">Cor:</label>
+                            <input type="color" id="corTextoSuperior" value="#ffffff" class="color-picker">
+                        </div>
+                    </div>
                     <textarea 
                         id="textoSuperior" 
                         placeholder="Digite o texto superior aqui..."
@@ -25,14 +36,44 @@
                 </div>
 
                 <div class="campo">
+                    <label for="uploadImagem">📤 Ou faça upload da sua imagem:</label>
+                    <input type="file" id="uploadImagem" accept="image/*" style="display: none;">
+                    <button type="button" id="btnUpload" class="btn btn-upload">📤 Escolher Arquivo</button>
+                    <span id="nomeArquivo" class="nome-arquivo"></span>
+                </div>
+
+                <div class="campo">
+                    <label for="buscaImagem">🔍 Buscar Imagem:</label>
+                    <input type="text" id="buscaImagem" placeholder="Digite para buscar...">
+                </div>
+
+                <div class="campo">
+                    <label for="seletorCategoria">📂 Categoria:</label>
+                    <select id="seletorCategoria">
+                        <option value="">Todas as categorias</option>
+                    </select>
+                </div>
+
+                <div class="campo">
                     <label for="seletorImagem">🖼️ Escolher Imagem:</label>
                     <select id="seletorImagem">
-                        <option value="">Selecione uma imagem...</option>
+                        <option value="">Selecione uma categoria primeiro...</option>
                     </select>
                 </div>
 
                 <div class="campo">
                     <label for="textoInferior">📝 Texto Inferior:</label>
+                    <div class="controles-texto">
+                        <div class="controle-item">
+                            <label for="tamanhoFonteInferior">Tamanho:</label>
+                            <input type="range" id="tamanhoFonteInferior" min="20" max="60" value="40" class="slider">
+                            <span id="valorTamanhoInferior">40px</span>
+                        </div>
+                        <div class="controle-item">
+                            <label for="corTextoInferior">Cor:</label>
+                            <input type="color" id="corTextoInferior" value="#ffffff" class="color-picker">
+                        </div>
+                    </div>
                     <textarea 
                         id="textoInferior" 
                         placeholder="Digite o texto inferior aqui..."
