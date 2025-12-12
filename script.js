@@ -20,6 +20,8 @@ const corTextoInferior = document.getElementById('corTextoInferior');
 const valorTamanhoSuperior = document.getElementById('valorTamanhoSuperior');
 const valorTamanhoInferior = document.getElementById('valorTamanhoInferior');
 
+// Sistema de Balões de Fala
+
 // ============================================
 // BANCO DE IMAGENS - Gerador de Memes
 // ============================================
@@ -322,6 +324,26 @@ function carregarImagem(url) {
     img.src = url;
 }
 
+// ============================================
+// SISTEMA DE BALÕES DE FALA
+// ============================================
+
+// Função auxiliar para desenhar retângulo arredondado
+function desenharRoundRect(x, y, width, height, radius) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+}
+
+
 // Configurar estilo do texto (usando valores dos controles)
 function configurarTexto(tipo = 'superior') {
     // Obter tamanho e cor baseado no tipo
@@ -361,12 +383,6 @@ function renderizarMeme() {
     // Obter textos
     const textoSuperiorValue = textoSuperior.value.trim();
     const textoInferiorValue = textoInferior.value.trim();
-    
-    // Se não houver textos, apenas mostrar a imagem
-    if (!textoSuperiorValue && !textoInferiorValue) {
-        atualizarDownload();
-        return;
-    }
     
     // Configurar estilo do texto
     configurarTexto();
@@ -530,6 +546,22 @@ btnGerar.addEventListener('click', () => {
         mostrarMensagemErro('Por favor, selecione uma imagem primeiro!');
     }
 });
+
+
+// Controles de tamanho de fonte - atualizar valores
+tamanhoFonteSuperior.addEventListener('input', (e) => {
+    valorTamanhoSuperior.textContent = e.target.value + 'px';
+    renderizarMeme();
+});
+
+tamanhoFonteInferior.addEventListener('input', (e) => {
+    valorTamanhoInferior.textContent = e.target.value + 'px';
+    renderizarMeme();
+});
+
+// Controles de cor - atualizar renderização
+corTextoSuperior.addEventListener('input', renderizarMeme);
+corTextoInferior.addEventListener('input', renderizarMeme);
 
 // Inicialização
 function inicializar() {
